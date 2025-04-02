@@ -17,6 +17,7 @@ setOptions({
 });
 
 const ApiKey = import.meta.env.VITE_API_KEY;
+const googleMapsLibrary = ["geometry"];
 
 function App() {
     const [data, setData] = useState(null);
@@ -29,12 +30,13 @@ function App() {
     const [selectedRange, setSelectedRange] = useState(null);
     const [routeData, setRouteData] = useState([]);
     const [activeMap, setActiveMap] = useState("realTimeMap"); // Estado para controlar el mapa activo
+    const [activeButton, setActiveButton] = useState("realTimeMap"); // Estado para rastrear el botón activo
 
     const wsRef = useRef(null);
 
     const { isLoaded } = useLoadScript({
         googleMapsApiKey: ApiKey,
-        libraries: ["geometry"],
+        libraries: googleMapsLibrary,
     });
 
     useEffect(() => {
@@ -84,7 +86,8 @@ function App() {
     if (!isLoaded) return <p>Cargando mapa...</p>;
 
     const handleMapSwitch = (mapType) => {
-        setActiveMap(mapType); // Cambia el mapa activo
+        setActiveMap(mapType);
+        setActiveButton(mapType); // Actualiza el botón activo
     };
 
     return (
@@ -97,19 +100,22 @@ function App() {
                     Mapa en Tiempo Real
                 </button>
                 <button className="ButtonB" onClick={() => handleMapSwitch("routeMap")}>
-                    Mapa de Rutas
+                    Historico de Rutas
                 </button>
                 <button className="ButtonC" onClick={() => handleMapSwitch("circleMap")}>
-                    Mapa con Círculo
+                    Radio de busqueda
                 </button>
             </section>
             <section>
                 <div>
+                    <h2 className="Title">
+                        Ultima Ubicación
+                    </h2>
                     <Table data={data ? [data] : []} />
                 </div>
 
                 {/* Mostrar el mapa según la selección */}
-                <div className="Mapa">
+                <div className={`Mapa ${activeButton}`}>
                     <h2 className="MapaTitle">Mapa</h2>
                     {activeMap === "realTimeMap" && (
                         <Map latitude={latitude} longitude={longitude} routeData={routeData} />
