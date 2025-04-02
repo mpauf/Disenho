@@ -26,7 +26,6 @@ function App() {
     const [longitude, setLongitude] = useState(() => {
         return parseFloat(localStorage.getItem("longitude")) || -74.850364;
     });
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [selectedRange, setSelectedRange] = useState(null);
     const [routeData, setRouteData] = useState([]);
     const [activeMap, setActiveMap] = useState("realTimeMap"); // Estado para controlar el mapa activo
@@ -82,14 +81,6 @@ function App() {
         fetchRoute();
     }, [selectedRange]);
 
-    function handleApplyDateRange(range) {
-        setSelectedRange({
-            startDate: range[0].startDate,
-            endDate: range[0].endDate,
-        });
-        setIsSidebarOpen(false);
-    }
-
     if (!isLoaded) return <p>Cargando mapa...</p>;
 
     const handleMapSwitch = (mapType) => {
@@ -101,22 +92,20 @@ function App() {
             <header>
                 <h1>ViaTracker</h1>
             </header>
+            <section className="Botones">
+                <button className="ButtonA" onClick={() => handleMapSwitch("realTimeMap")}>
+                    Mapa en Tiempo Real
+                </button>
+                <button className="ButtonB" onClick={() => handleMapSwitch("routeMap")}>
+                    Mapa de Rutas
+                </button>
+                <button className="ButtonC" onClick={() => handleMapSwitch("circleMap")}>
+                    Mapa con Círculo
+                </button>
+            </section>
             <section>
                 <div>
                     <Table data={data ? [data] : []} />
-                </div>
-
-                {/* Botones para cambiar entre mapas */}
-                <div>
-                    <button onClick={() => handleMapSwitch("realTimeMap")}>
-                        Mapa en Tiempo Real
-                    </button>
-                    <button onClick={() => handleMapSwitch("routeMap")}>
-                        Mapa de Rutas
-                    </button>
-                    <button onClick={() => handleMapSwitch("circleMap")}>
-                        Mapa con Círculo
-                    </button>
                 </div>
 
                 {/* Mostrar el mapa según la selección */}
@@ -129,14 +118,6 @@ function App() {
                     {activeMap === "circleMap" && <MapWithCircle />}
                 </div>
             </section>
-
-            <div className="Rutas">
-                <DateRangeSidebar
-                    isOpen={isSidebarOpen}
-                    onClose={() => setIsSidebarOpen(false)}
-                    onApply={handleApplyDateRange}
-                />
-            </div>
         </>
     );
 }
