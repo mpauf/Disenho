@@ -1,6 +1,7 @@
 import { GoogleMap, Marker, Polyline, useLoadScript } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import { latestLocation } from "../services/api";
+import Table from "./Table";
 
 const ApiKey = import.meta.env.VITE_API_KEY;
 
